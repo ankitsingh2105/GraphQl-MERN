@@ -29,6 +29,10 @@ const resolvers = {
             })
             console.log("this is the user ::" , requiredUser);
             return requiredUser;
+        },
+        singleGame : function(parent , args){
+            const {id} = args;
+            return games.find((e)=> e.id === id);
         }
     }
 }
