@@ -7,7 +7,7 @@ const { default: axios } = require("axios");
 
 const typeDefs = require("./schema");
 
-const { games, authors, reviews } = require("./db");
+let { games, authors, reviews } = require("./db");
 
 
 const resolvers = {
@@ -70,6 +70,25 @@ const resolvers = {
                 return e.id !== id;
             })
             return updatedArray;
+        },
+        addGame : (parent , args)=>{
+            let game = {
+                ...args.game , id : Math.floor(Math.random() * 100).toString()
+            }
+            games.push(game);
+            return game;
+        },
+        editGame : (parent , args)=>{
+            const {id , edits} = args;
+            games = games.map((e)=>{
+                if(e.id === id){
+                   return { ...e , ...edits}
+                }
+                return e;
+            })
+            return games.find((e)=>{
+                return e.id === id;
+            })
         }
     }
 }
