@@ -14,6 +14,7 @@ const authors = [
 
 const reviews = [
     { id: '1', name: 'Alice', content: 'Amazing game with stunning visuals!', authorId: '1', gameId: '1' },
+    { id: '5', name: 'Ankit', content: 'Total Shit !', authorId: '1', gameId: '1' },
     { id: '2', name: 'Bob', content: 'Great gameplay and storyline.', authorId: '2', gameId: '2' },
     { id: '3', name: 'Charlie', content: 'Engaging and fun for all ages.', authorId: '3', gameId: '3' },
     { id: '4', name: 'David', content: 'A must-play for everyone!', authorId: '4', gameId: '4' }

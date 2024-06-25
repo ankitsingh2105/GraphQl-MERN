@@ -4,36 +4,63 @@ const { expressMiddleware } = require("@apollo/server/express4");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { default: axios } = require("axios");
+
 const typeDefs = require("./schema");
+
 const { games, authors, reviews } = require("./db");
-console.log(games ,authors , reviews);
+
+
 const resolvers = {
+    // todo :: for nested queries we have to make a new obj
+    // ! we cannot name this "Game" anything this have to be a type
+    Game: {
+        // todo::  this parent is the parent if the Game and is an entry point to the graph
+        // ! this "reviews" have to match the "reviews in the schema"
+        reviews: function (parent, args) {
+            const { id } = parent;
+            return reviews.filter((e) => {
+                return e.gameId === id;
+            })
+        }
+    },
+    Author : {
+        reviews : (parent)=>{
+            const {id} = parent;    
+            return reviews.filter((e)=>{
+                return e.authorId === id; 
+            })
+        }
+    },
+    // todo :: these are resolvers for the entry point to the graph
     Query: {
-        users : async function (){
+        users: async function () {
             let response = await axios.get("https://jsonplaceholder.typicode.com/users/");
             return response.data;
         },
-        
-        games : function(){
+
+        games: function () {
             return games;
         },
-        // for query varible
-        singleUser : async function(parent , args){
-            const {id} = args;
-            console.log("this is the id :: " , id);
+        // todo :: for query varible
+        singleUser: async function (parent, args) {
+            const { id } = args;
             let response = await axios.get("https://jsonplaceholder.typicode.com/users/");
             const userArray = await response.data;
-            console.log("the array :: " , userArray);
-            let requiredUser =  userArray.find((e)=>{
+            let requiredUser = userArray.find((e) => {
                 return e.id === parseInt(id);
             })
-            console.log("this is the user ::" , requiredUser);
             return requiredUser;
         },
-        singleGame : function(parent , args){
+        singleGame: function (parent, args) {
+            const { id } = args;
+            return games.find((e) => e.id === id);
+        },
+
+        singleAuthor : function(parent , args){
             const {id} = args;
-            return games.find((e)=> e.id === id);
+            return authors.find((e) => e.id === id);
         }
+
     }
 }
 

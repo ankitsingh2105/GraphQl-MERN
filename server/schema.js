@@ -3,20 +3,25 @@ const typeDefs = `#graphql
         id : ID!,
         title : String!,
         platform :  [String!]!
+        reviews : [Review!]
+        game : [Game!]
     }
     type Review{
         id : ID!,
         name : String!,
         content: String!
+        game : Game!,
+        author : Author!
     }
     type Author{
         id : ID!,
         name : String!,
         verified : Boolean!
+        reviews : [Review!]
     } 
     type Address {
         street: String!
-        suite: String!
+        suite: String! 
         city: String!
         zipcode: String!
     }    
@@ -32,7 +37,8 @@ const typeDefs = `#graphql
         authors : [Author]
         users : [User]
         singleUser(id : ID!): User
-        singleGame(id : ID!) : Game
+        singleGame(id : ID!) : Game,
+        singleAuthor(id : ID!) : Author 
     }
     `
 module.exports = typeDefs
