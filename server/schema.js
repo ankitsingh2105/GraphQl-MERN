@@ -40,6 +40,9 @@ const typeDefs = `#graphql
         singleGame(id : ID!) : Game,
         singleAuthor(id : ID!) : Author 
     }
-    `
+    type Mutation{
+        deleteGame(id : ID!) : [Game]
+    }    
+`
 module.exports = typeDefs
     // necessary to make

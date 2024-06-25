@@ -60,7 +60,17 @@ const resolvers = {
             const {id} = args;
             return authors.find((e) => e.id === id);
         }
+    },
 
+    // todo :: resolver for mutation
+    Mutation : {
+        deleteGame : (parent , args)=>{
+            const {id} = args;
+            let updatedArray = games.filter((e)=>{
+                return e.id !== id;
+            })
+            return updatedArray;
+        }
     }
 }
 
@@ -69,6 +79,28 @@ const resolvers = {
 //       name
 //     }
 //   }
+
+// ! for many query vairables ::
+// query op($gameID :ID!, $authorID :ID!){
+//     singleGame(id:$gameID) {
+//       id,
+//       platform,
+//       reviews {
+//         name
+//         content
+//       }
+//     }
+//     singleAuthor(id : $authorID){
+//       name
+//       verified
+//       reviews {
+//         name
+//         content
+//       }
+//     }
+//   }
+
+
 const startServer = async () => {
     const app = express();
     const server = new ApolloServer({
