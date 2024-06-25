@@ -9,18 +9,35 @@ const { games, authors, reviews } = require("./db");
 console.log(games ,authors , reviews);
 const resolvers = {
     Query: {
-        
         users : async function (){
             let response = await axios.get("https://jsonplaceholder.typicode.com/users/");
             return response.data;
         },
-
+        
         games : function(){
             return games;
+        },
+        // for query varible
+        singleUser : async function(parent , args){
+            const {id} = args;
+            console.log("this is the id :: " , id);
+            let response = await axios.get("https://jsonplaceholder.typicode.com/users/");
+            const userArray = await response.data;
+            console.log("the array :: " , userArray);
+            let requiredUser =  userArray.find((e)=>{
+                return e.id === parseInt(id);
+            })
+            console.log("this is the user ::" , requiredUser);
+            return requiredUser;
         }
-
     }
 }
+
+// query op($id : ID!){
+//     singleUser(id : $id){
+//       name
+//     }
+//   }
 const startServer = async () => {
     const app = express();
     const server = new ApolloServer({

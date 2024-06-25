@@ -31,6 +31,7 @@ const typeDefs = `#graphql
         games : [Game],
         authors : [Author]
         users : [User]
+        singleUser(id : ID!): User
     }
     `
 module.exports = typeDefs
