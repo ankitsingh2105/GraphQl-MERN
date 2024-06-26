@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import { useQuery, ApolloClient } from '@apollo/client';
 import { gql, useLazyQuery } from '@apollo/client';
+
 
 
 const query = gql`
@@ -9,16 +10,40 @@ query listGames{
   games {
     title
     platform
+    }
+    }
+    `
+
+const singleUserData = gql`
+    query singleUser($userID : ID!){
+    singleUser(id : $userID){
+    id
+    name
+    username,
+    address {
+      city
+      street
+    }
   }
 }
-`
+    `
 
 function App() {
-  const [count, setCount] = useState(0)
-  const { data : gameData, loading, error } = useQuery(query)
+  const { data: gameData, loading, error } = useQuery(query)
+  const [userID, setuserID] = useState("")
+
+  // todo :: if we want to get data onClick
+  // const {data : userData , loading : userLoading} = useQuery(singleUserData);
+  const [
+    fetchUser,
+    { data: userData, loading: userLoading }
+  ] = useLazyQuery(singleUserData);
+
   useEffect(() => {
-    console.log("this is the gameData :: ", gameData);
-  },[gameData])
+    console.log("this is the user :: ", userData);
+  }, [userData])
+
+
   return (
     <>
       {
@@ -51,6 +76,40 @@ function App() {
           :
           <>
             <div>loading........</div>
+          </>
+      }
+      <br />
+      <input type="text" onChange={((e) => { setuserID(e.target.value) })} />
+      <br />
+      <br />
+      <button onClick={() => {
+        fetchUser({
+          variables: {
+            userID: userID
+          }
+        })
+      }} >
+        Fetch Users
+      </button>
+      <br />
+      {
+        userLoading ?
+          <>
+            <div>Loading the users</div>
+          </>
+          :
+          <>
+            {
+              userData ?
+                <>
+                  <h3>{userData.singleUser.name}</h3>
+                  <p>{userData.singleUser.username}</p>
+                  <p>{userData.singleUser.address.city}, {userData.singleUser.address.street}</p>
+                </>
+                :
+                <>
+                </>
+            }
           </>
       }
     </>
